@@ -24,14 +24,8 @@ async def question_answer(msg: types.Message, state: FSMContext) -> None:
         await bot.send_message(chat_id=msg.chat.id, text="Не правильно, иди к следующей задаче")
         counter_correct = state_data['counter_correct']
 
-    if state_data['index_question'] == 0:
-
-        skill_id = state_data['skill_id']
-        index_question = state_data['index_question'] + 1
-        questions = state_data['questions']
-        task_id += 1
-
-    elif state_data['index_question'] == 1 and counter_correct >= 1:
+    if (state_data['index_question'] == 0) or (state_data['index_question'] == 2) or \
+            (state_data['index_question'] == 1 and counter_correct >= 1):
 
         skill_id = state_data['skill_id']
         index_question = state_data['index_question'] + 1
@@ -55,13 +49,6 @@ async def question_answer(msg: types.Message, state: FSMContext) -> None:
         tasks_id = await QuestionAnswer.get_tasks_id(skill_id)
         task_id = tasks_id[index_question]
         questions = await QuestionAnswer.get_questions(tasks_id)
-
-    elif state_data['index_question'] == 2:
-
-        skill_id = state_data['skill_id']
-        index_question = state_data['index_question'] + 1
-        questions = state_data['questions']
-        task_id += 1
 
     elif state_data['index_question'] == 3 and counter_correct >= 3:
 
