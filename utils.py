@@ -66,3 +66,10 @@ class QuestionAnswer:
             await state.reset_state()
             return True
         return False
+
+
+async def get_first_skill_id():
+    with open(QuestionAnswer.skill_path, "r", encoding="utf-8") as file:
+        file = json.load(file)
+        for i in file:
+            return i["skill_id"]
