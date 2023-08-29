@@ -8,6 +8,7 @@ from utils import QuestionAnswer
 
 @dp.message_handler(state=Test.Question_answer)
 async def question_answer(msg: types.Message, state: FSMContext) -> None:
+    """Обработчик для ответов пользователя на вопросы в режиме Test.Question_answer"""
     state_data = await state.get_data()
 
     task_id = state_data['task_id']
@@ -24,14 +25,15 @@ async def question_answer(msg: types.Message, state: FSMContext) -> None:
         await bot.send_message(chat_id=msg.chat.id, text="Не правильно, иди к следующей задаче")
         counter_correct = state_data['counter_correct']
 
+    # Обработка 1,3 вопрос и 2 вопроса, если до этого он ответил хотя бы на один вопрос верно
     if (state_data['index_question'] == 0) or (state_data['index_question'] == 2) or \
             (state_data['index_question'] == 1 and counter_correct >= 1):
-
         skill_id = state_data['skill_id']
         index_question = state_data['index_question'] + 1
         questions = state_data['questions']
         task_id += 1
 
+    # Обработка 2 вопроса, если до этого он не ответил правильно не на один вопрос
     elif state_data['index_question'] == 1:
 
         index_question = 0
@@ -50,6 +52,7 @@ async def question_answer(msg: types.Message, state: FSMContext) -> None:
         task_id = tasks_id[index_question]
         questions = await QuestionAnswer.get_questions(tasks_id)
 
+    # Обработка 4 вопроса, если до этого он ответил на 3 и более правильно
     elif state_data['index_question'] == 3 and counter_correct >= 3:
 
         index_question = 0
@@ -68,6 +71,7 @@ async def question_answer(msg: types.Message, state: FSMContext) -> None:
         task_id = tasks_id[index_question]
         questions = await QuestionAnswer.get_questions(tasks_id)
 
+    # Обработка 4 вопроса, если до этого он не ответил на 3 и более правильно
     else:
 
         index_question = 0

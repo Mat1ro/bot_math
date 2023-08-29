@@ -1,6 +1,5 @@
 import json
 import os
-
 import openpyxl
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -10,12 +9,12 @@ task_path = os.path.join(data_dir, "task.json")
 
 
 async def skill_to_json() -> None:
+    """Конвертирует данные из листа 'Skill' Excel-файла в JSON-формат."""
     workbook = openpyxl.load_workbook('file.xlsx')
     sheet = workbook['Skill']
 
     data = []
     for row in sheet.iter_rows(min_row=2, values_only=True):
-
         if isinstance(row[1], float):
             if_passed_value = int(row[1])
         else:
@@ -41,6 +40,7 @@ async def skill_to_json() -> None:
 
 
 async def task_to_json() -> None:
+    """Конвертирует данные из листа 'Task' Excel-файла в JSON-формат."""
     workbook = openpyxl.load_workbook('file.xlsx')
     sheet = workbook['Task']
 

@@ -9,6 +9,10 @@ from xlsx_to_json import skill_to_json, task_to_json, current_dir
 
 @dp.message_handler(commands=['start'], state="*")
 async def cmd_start(msg: types.Message, state: FSMContext) -> None:
+    """
+    Обработчик команды /start. Выполняет начальную инициализацию и отправляет приветственное сообщение.
+    Загружает из xlsx в json
+    """
     try:
         await skill_to_json()
         await task_to_json()

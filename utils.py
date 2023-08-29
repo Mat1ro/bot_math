@@ -9,12 +9,14 @@ class QuestionAnswer:
     task_path = os.path.join(data_dir, "task.json")
 
     @classmethod
-    async def open_file(cls, path):
+    async def open_file(cls, path: str):
+        """Открывает JSON-файл и возвращает его содержимое."""
         with open(path, "r", encoding="utf-8") as file:
             return json.load(file)
 
     @classmethod
     async def get_tasks_id(cls, skill_id: int):
+        """Получает идентификатор задачи для заданного идентификатора навыка."""
         file = await cls.open_file(cls.skill_path)
         for i in file:
             if i.get("skill_id") == skill_id:
@@ -22,6 +24,7 @@ class QuestionAnswer:
 
     @classmethod
     async def get_if_passed(cls, skill_id: int) -> int:
+        """Получает статус 'if_passed' для заданного идентификатора навыка."""
         file = await cls.open_file(cls.skill_path)
         for i in file:
             if i.get("skill_id") == skill_id:
@@ -29,6 +32,7 @@ class QuestionAnswer:
 
     @classmethod
     async def get_if_failed(cls, skill_id: int):
+        """Получает статус 'if_failed' для заданного идентификатора навыка."""
         file = await cls.open_file(cls.skill_path)
         for i in file:
             if i.get("skill_id") == skill_id:
@@ -36,6 +40,7 @@ class QuestionAnswer:
 
     @classmethod
     async def get_questions(cls, tasks: list[int]) -> list:
+        """Получает список вопросов для заданных идентификаторов задач."""
         questions = []
         file = await cls.open_file(cls.task_path)
         for i in tasks:
@@ -46,6 +51,7 @@ class QuestionAnswer:
 
     @classmethod
     async def is_correct(cls, task_id: int, answer: int) -> bool:
+        """Проверяет, является ли ответ правильным для заданной задачи."""
         file = await cls.open_file(cls.task_path)
         for i in file:
             if i["answer"] == answer and i["task_id"] == task_id:
@@ -54,6 +60,7 @@ class QuestionAnswer:
 
     @classmethod
     async def is_finish(cls, msg, state) -> bool:
+        """Проверяет, завершена ли тренировка по всем навыкам."""
         state_data = await state.get_data()
         if state_data['skill_id'] == "fin":
             state_data['skills_info'].popitem()
@@ -69,6 +76,7 @@ class QuestionAnswer:
 
 
 async def get_first_skill_id():
+    """Получает идентификатор первого навыка из файла с навыками."""
     with open(QuestionAnswer.skill_path, "r", encoding="utf-8") as file:
         file = json.load(file)
         for i in file:
