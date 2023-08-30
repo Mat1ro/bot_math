@@ -31,7 +31,8 @@ async def question_answer(msg: types.Message, state: FSMContext) -> None:
         skill_id = state_data['skill_id']
         index_question = state_data['index_question'] + 1
         questions = state_data['questions']
-        task_id += 1
+        tasks_id = await QuestionAnswer.get_tasks_id(skill_id)
+        task_id = tasks_id[index_question]
 
     # Обработка 2 вопроса, если до этого он не ответил правильно не на один вопрос
     elif state_data['index_question'] == 1:
