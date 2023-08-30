@@ -34,25 +34,6 @@ async def question_answer(msg: types.Message, state: FSMContext) -> None:
         tasks_id = await QuestionAnswer.get_tasks_id(skill_id)
         task_id = tasks_id[index_question]
 
-    # Обработка 2 вопроса, если до этого он не ответил правильно не на один вопрос
-    elif state_data['index_question'] == 1:
-
-        index_question = 0
-        counter_correct = 0
-        skill_id = await QuestionAnswer.get_if_failed(state_data['skill_id'])
-
-        skill_info = state_data["skills_info"]
-        skill_info[skill_id] = 0
-        await state.update_data({"skills_info": skill_info})
-
-        await state.update_data({"skill_id": skill_id})
-        if await QuestionAnswer.is_finish(msg, state):
-            return
-
-        tasks_id = await QuestionAnswer.get_tasks_id(skill_id)
-        task_id = tasks_id[index_question]
-        questions = await QuestionAnswer.get_questions(tasks_id)
-
     # Обработка 4 вопроса, если до этого он ответил на 3 и более правильно
     elif state_data['index_question'] == 3 and counter_correct >= 3:
 
@@ -73,6 +54,7 @@ async def question_answer(msg: types.Message, state: FSMContext) -> None:
         questions = await QuestionAnswer.get_questions(tasks_id)
 
     # Обработка 4 вопроса, если до этого он не ответил на 3 и более правильно
+    # либо 2 вопроса, если до этого он не ответил правильно не на один вопрос
     else:
 
         index_question = 0
